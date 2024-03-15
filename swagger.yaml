@@ -1,0 +1,205 @@
+openapi: 3.0.1
+info:
+  title: Authentification API
+  description: |-
+    API for authentification between containers.
+    This API generates a secure JWT token. 
+    Other containers need to retrive the public key to verify the signature of the JWT.
+  version: 0.0.1
+servers:
+  - url: /auth/
+tags:
+  - name: auth
+    description: Authentification
+  - name: user
+    description: Operations sur les utilisateurs (qui peuvent se connecter)
+paths:
+  /:
+    get:
+      tags:
+        - auth
+      summary: Affiche les informations utilisateur
+      description: Affiche les informations de l'utilisateur connecté. Redirige vers la page de connexion si non connecté
+      operationId: userInfo
+      responses:
+        '200':
+          description: Utilisateur connecté
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '302':
+          description: Non connecté. Redirection vers la page de connexion
+  /login:
+    post:
+      tags:
+        - auth
+      summary: Connexion
+      description: Identification à l'API via une authentification HTTP stable.
+      operationId: login
+      requestBody:
+        content:
+          application/json: {}
+        required: false
+      responses:
+        '200':
+          description: Connexion avec succès
+        '400':
+          description: Saisie invalide
+      security:
+        - basicAuth: []
+  /logout:
+    get:
+      tags:
+        - auth
+      summary: Déconnexion
+      operationId: logoutUser
+      parameters: []
+      responses:
+        default:
+          description: déconnexion réussie
+  /user:
+    post:
+      tags:
+        - user
+      summary: Créer un utilisateur
+      operationId: createUser
+      requestBody:
+        description: Objet utilisateur a créer
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: Opération avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /user/{username}:
+    get:
+      tags:
+        - user
+      summary: Récupération d'un utilisateur selon son nom d'utilisateur
+      operationId: getUserByName
+      parameters:
+        - name: username
+          in: path
+          description: Nom d'utilisateur à récupérer
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Opération avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+        '400':
+          description: Nom d'utilisateur donné invalide
+        '404':
+          description: Utilisateur introuvable
+    patch:
+      tags:
+        - user
+      summary: Mettre à jour un utilisateur
+      operationId: updateUser
+      parameters:
+        - name: username
+          in: path
+          description: Le nom de l'utilisateur à modifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Mettre à jour un utilisateur existant
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: Opération avec succès
+    delete:
+      tags:
+        - user
+      summary: Supprimer un utilisateur
+      operationId: deleteUser
+      parameters:
+        - name: username
+          in: path
+          description: Le nom d'utilisateur à supprimer
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Nom d'utilisateur donné invalide
+        '404':
+          description: Utilisateur introuvable
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uuid
+          example: 123456789
+        username:
+          type: string
+          example: johndoe692
+        exp:
+          type: integer
+          format: timestamp
+          example: 1710498222
+        permissions:
+          type: array
+          items:
+            type: object
+            properties:
+              read:
+                type: array
+                items:
+                  type: string
+                  example: 
+                    - servers
+                    - ipam
+              write:
+                type: array
+                items:
+                  type: string
+                  example: 
+                    - servers
+                    - users
+                    - computers
+    ApiResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "message"
+        message:
+          type: string
+      xml:
+        name: '##default'
+  requestBodies:
+    User:
+      description: Objet utilisateur à ajouter
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+  securitySchemes:
+    basicAuth: 
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+security:
+  - bearerAuth: [] 
