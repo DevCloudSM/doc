@@ -1,6 +1,6 @@
 # AssetManager
 
-Graphique excalidraw : https://excalidraw.com/#json=9KoCJcKRJHwCNnNKnPrTY,KrIfOnyjVD0SlnNjsVTG5A
+Graphique excalidraw : https://excalidraw.com/#room=b70f9c6b9e6856d15638,yjcLH3aAZH_RFuWg9aR0XQ
 
 - FA_1 : Barnabe D. (Team Lead), Maël G., Léo D., Sarah A., Loris E. 
   
