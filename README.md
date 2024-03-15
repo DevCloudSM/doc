@@ -4,7 +4,7 @@ Graphique excalidraw : https://excalidraw.com/#json=9KoCJcKRJHwCNnNKnPrTY,KrIfOn
 
 - FA_1 : Barnabe D. (Team Lead), Maël G., Léo D., Sarah A., Loris E. 
   
-API Serveurs, Logiciels
+API Serveurs, Logiciels, Authentification
 
 - FA_2 : Louison P. (Team Lead), Nathaniel G., Owen D., Kilian O., Victor C. 
   
